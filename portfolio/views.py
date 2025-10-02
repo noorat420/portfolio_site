@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from .models import Project, Skill, Profile
+from .models import Project, Skill, Profile,Experience, Education, Certification, Course
 
 def home(request):
     profile = Profile.objects.first()
@@ -22,3 +22,23 @@ def project_detail(request, pk):
 def contact(request):
    
     return render(request, 'portfolio/contact.html')    
+
+
+
+def about(request):
+    
+    profile = Profile.objects.first()
+    experiences = Experience.objects.all() 
+    educations = Education.objects.all() 
+    certifications = Certification.objects.all() 
+    courses = Course.objects.all() 
+
+    context = {
+        'profile': profile,
+        'experiences': experiences,
+        'educations': educations,
+        'certifications': certifications,
+        'courses': courses,
+    }
+
+    return render(request, 'portfolio/about.html', context)
