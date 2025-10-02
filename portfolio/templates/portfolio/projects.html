@@ -1,0 +1,217 @@
+{% extends 'portfolio/base.html' %}
+
+{% block extra_css %}
+<style>
+    .page-header {
+    background: white;
+        padding: 4rem 2rem;
+        border-radius: 12px;
+        margin: 3rem 0;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+.page-header h1 {
+    text-align: center;
+        margin-bottom: 2rem;
+        color: #1a1a1a;
+        font-size: 2.5rem;
+}
+
+.page-header p {
+    max-width: 800px;
+        margin: 0 auto;
+        text-align: center;
+        font-size: 1.1rem;
+        color: #666;
+        line-height: 1.8;
+}
+   
+
+   
+    .projects-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 2.5rem;
+        margin-top: 2rem;
+    }
+    
+    .project-card {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+    
+    .project-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+    
+    .project-image-wrapper {
+        position: relative;
+        overflow: hidden;
+        height: 250px;
+    }
+    
+    .project-card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s;
+    }
+    
+    .project-card:hover img {
+        transform: scale(1.05);
+    }
+    
+    .project-placeholder {
+        width: 100%;
+        height: 250px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 4rem;
+        font-weight: bold;
+    }
+    
+    
+    
+    .project-content {
+        padding: 2rem;
+    }
+    
+    .project-content h3 {
+        margin-bottom: 1rem;
+        color: #1a1a1a;
+        font-size: 1.5rem;
+        font-weight: 600;
+    }
+    
+    .project-content p {
+        color: #666;
+        line-height: 1.6;
+        margin-bottom: 1rem;
+    }
+ 
+    
+    
+    .project-links {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1.5rem;
+    }
+    
+    .btn {
+        display: inline-block;
+        padding: 0.7rem 1.5rem;
+        background: #1a1a1a;
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+        transition: all 0.3s;
+        font-weight: 500;
+        font-size: 0.9rem;
+    }
+    
+    .btn:hover {
+        background: #667eea;
+        transform: translateY(-2px);
+    }
+    
+    .btn-secondary {
+        background: transparent;
+        border: 2px solid #1a1a1a;
+        color: #1a1a1a;
+    }
+    
+    .btn-secondary:hover {
+        background: #1a1a1a;
+        color: white;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        color: #666;
+    }
+    
+    .empty-state h2 {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+        color: #333;
+    }
+    
+    .empty-state p {
+        font-size: 1.1rem;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .page-header h1 {
+            font-size: 2rem;
+        }
+        
+        .projects-grid {
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+        
+        .project-links {
+            flex-direction: column;
+        }
+        
+        .btn {
+            text-align: center;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="page-header">
+    <h1>My Projects</h1>
+    <p>Explore my latest work and creative solutions</p>
+</div>
+
+<div class="container">
+    <!-- Projects Grid -->
+    <div class="projects-grid">
+        {% for project in projects %}
+        <div class="project-card">
+            <div class="project-image-wrapper">
+                {% if project.image %}
+                <img src="{{ project.image.url }}" alt="{{ project.title }}">
+                {% else %}
+                <div class="project-placeholder">
+                    {{ project.title|slice:":1" }}
+                </div>
+                {% endif %}
+                
+            </div>
+            
+            <div class="project-content">
+                <h3>{{ project.title }}</h3>
+                <p>{{ project.description|truncatewords:30 }}</p>
+                <div class="project-links">
+                    <a href="{% url 'portfolio:project_detail' project.pk %}" class="btn">View Details</a>
+                    {% if project.github_link %}
+                    <a href="{{ project.github_link }}" target="_blank" class="btn btn-secondary">GitHub</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="empty-state">
+            <h2>No Projects Yet</h2>
+            <p>Projects will appear here once they're added to the portfolio. Check back soon!</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
